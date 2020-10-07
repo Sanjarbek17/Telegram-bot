@@ -2,10 +2,10 @@ import telegram
 from pprint import pprint
 bot = telegram.Bot(token='1395602363:AAHFmnjEMWTF9BJajHu2Pm8rdRSKgGM4dCo')
 update_last_id=-1
-x=True
+x=None
 while True:
     button=telegram.replykeyboardmarkup.ReplyKeyboardMarkup([
-    ['lotin to krill','krill to lotin']
+    ['lotin to krill','крилл то лотин']
     ])
     update=bot.getUpdates()[-1]
     update_id=update.update_id
@@ -17,7 +17,7 @@ while True:
                 bot.send_message(chat_id,'Please choose one of them',reply_markup=button)
         if txt=='lotin to krill':
             x=True
-        elif txt=='krill to lotin':
+        elif txt=='крилл то лотин':
             x=False
         if x==True:
             if update_last_id!=update_id:
