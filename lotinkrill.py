@@ -6,7 +6,7 @@ x=None
 while True:
     button=telegram.replykeyboardmarkup.ReplyKeyboardMarkup([
     ['lotin to krill','крилл то лотин']
-    ])
+    ],resize_keyboard=True)
     update=bot.getUpdates()[-1]
     update_id=update.update_id
     chat_id=update.message.chat.id
