@@ -57,6 +57,7 @@ def wishes():
        }
     return t
 update_last_id=-1
+lst=[1,2,3,4,5,6,7,8,9,10]
 while True:
     update=bot.getUpdates()[-1]
     update_id=update.update_id
@@ -67,7 +68,7 @@ while True:
         ['for mother','for friend'],
         ['for brother','for sister']
     ],resize_keyboard=True)
-    a=random.randint(1,10)
+    a=random.choice(lst)
     wish=wishes()
     if update_last_id!=update_id:
         if txt=='/start':
