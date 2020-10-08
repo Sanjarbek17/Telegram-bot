@@ -1,6 +1,6 @@
 import telegram
 from pprint import pprint
-bot = telegram.Bot(token='1395602363:AAHFmnjEMWTF9BJajHu2Pm8rdRSKgGM4dCo')
+bot = telegram.Bot(token='1301852222:AAGbEnDZmbYma5Y1GcDTj_H9HidQTBX8vOw')
 update_last_id=-1
 x=None
 while True:
@@ -12,11 +12,9 @@ while True:
     chat_id=update.message.chat.id
     txt=update.message.text
     message_id=update.message.message_id
-    
     if update_last_id!=update_id:
-        print(txt)
         if txt=='/start':
-                bot.send_message(chat_id,'Please choose one of them',reply_markup=button)
+            bot.send_message(chat_id,'Please choose one of them',reply_markup=button)
         if txt=='lotin to krill':
             x=True
         elif txt=='крилл то лотин':
