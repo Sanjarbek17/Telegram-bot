@@ -12,7 +12,9 @@ while True:
     chat_id=update.message.chat.id
     txt=update.message.text
     message_id=update.message.message_id
+    
     if update_last_id!=update_id:
+        print(txt)
         if txt=='/start':
                 bot.send_message(chat_id,'Please choose one of them',reply_markup=button)
         if txt=='lotin to krill':
