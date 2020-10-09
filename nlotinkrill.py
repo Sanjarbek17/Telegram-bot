@@ -1,6 +1,6 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import telegram
-x=None
+dct={}
 def start(update,context):
     bot=context.bot
     chat_id=update.message.chat.id
@@ -11,20 +11,21 @@ def start(update,context):
 def lotink(update,context):
     bot=context.bot
     chat_id=update.message.chat.id
-    global x
-    x=True
+    first=update.message.chat.first_name
+    dct[first]='lotin'
     bot.sendMessage(chat_id,'Now send me text')
 def krilll(update,context):
     bot=context.bot
     chat_id=update.message.chat.id
-    global x
-    x=False
+    first=update.message.chat.first_name
+    dct[first]='krill'
     bot.sendMessage(chat_id,'Now send me text')
 def lotin(update,context):
     bot=context.bot
     chat_id=update.message.chat.id
     txt=update.message.text
-    if x==True:
+    first=update.message.chat.first_name
+    if dct[first]=='lotin':
         if txt[0]=='E' or txt[0]=='e':
             txt=txt.replace('E','Э')
             txt=txt.replace('e','э')
@@ -94,7 +95,7 @@ def lotin(update,context):
         txt=txt.replace('H','Ҳ')
         txt=txt.replace('h','ҳ')
         bot.send_message(chat_id,txt)
-    if x==False:
+    if dct[first]=='krill':
         txt=txt.replace('в','v')
         txt=txt.replace('Я','Ya')
         txt=txt.replace('я','ya')
