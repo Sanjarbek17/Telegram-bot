@@ -5,7 +5,7 @@ def start(update,context):
     bot=context.bot
     chat_id=update.message.chat.id
     button=telegram.replykeyboardmarkup.ReplyKeyboardMarkup([
-    ['/lotin','/krill']
+    ['/lotin_krill','/krill_lotin']
     ],resize_keyboard=True)
     bot.sendMessage(chat_id,'Please choose one of these',reply_markup=button)
 def lotink(update,context):
@@ -96,11 +96,14 @@ def lotin(update,context):
         txt=txt.replace('h','ҳ')
         bot.send_message(chat_id,txt)
     if dct[first]=='krill':
+        if txt[0]=='Е' or txt[0]=='е':
+            txt=txt.replace('Е','Ye')
+            txt=txt.replace('е','ye') 
         txt=txt.replace('в','v')
         txt=txt.replace('Я','Ya')
         txt=txt.replace('я','ya')
         txt=txt.replace('Е','E')
-        txt=txt.replace('е','e')      
+        txt=txt.replace('е','e')
         txt=txt.replace(' Е','Ye')
         txt=txt.replace(' е','ye')
         txt=txt.replace('Ё','Yo')
@@ -166,8 +169,8 @@ def lotin(update,context):
         bot.send_message(chat_id,txt)
 updater=Updater(token='1395602363:AAHFmnjEMWTF9BJajHu2Pm8rdRSKgGM4dCo')
 updater.dispatcher.add_handler(CommandHandler('start',start))
-updater.dispatcher.add_handler(CommandHandler('lotin',lotink))
-updater.dispatcher.add_handler(CommandHandler('krill',krilll))
+updater.dispatcher.add_handler(CommandHandler('lotin_krill',lotink))
+updater.dispatcher.add_handler(CommandHandler('krill_lotin',krilll))
 updater.dispatcher.add_handler(MessageHandler(Filters.text,lotin))
 updater.start_polling()
 updater.idle()
