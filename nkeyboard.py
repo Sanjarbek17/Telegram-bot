@@ -6,7 +6,9 @@ def hello(update,context):
     txt=update.message.text
     button=telegram.replykeyboardmarkup.ReplyKeyboardMarkup([
     ['7','8','9','/'],
-    ['4','5','6','*']
+    ['4','5','6','*'],
+    ['1','2','3','+'],
+    ['0','.','=','-']
     ])
     bot.sendMessage(chat_id,txt,reply_markup=button)
 updater=Updater(token='1345758482:AAGWIdwbWrKaNQH5UcRUzBCrFyKvxsCivyA')
