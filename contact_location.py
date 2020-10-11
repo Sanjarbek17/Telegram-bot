@@ -2,7 +2,6 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from telegram import ReplyKeyboardMarkup, KeyboardButton
 import os
 token= os.environ['token']
-print(token)
 def start(update, context):
     bot=context.bot
     chat_id=update.message.chat.id
@@ -20,12 +19,16 @@ def contact(update, context):
     chat_id=update.message.chat.id
     text='Telefon raqam uchun rahmat'
     contact=update.message.contact
-    f.write(str(contact))
+    x=str(contact)+'\n'
+    f.write(str(x))
     bot.send_message(chat_id, text)
 def location(update, context):
     f=open('location.txt', 'a')
     bot=context.bot
     chat_id=update.message.chat.id
+    location=update.message.location
+    x=str(location)+'\n'
+    f.write(str(x))
     text='Manzil uchun rahmat'
     location=update.message.location
     f.write(str(location))
