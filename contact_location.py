@@ -30,11 +30,10 @@ def location(update, context):
     f=open('location.txt', 'a')
     bot=context.bot
     chat_id=update.message.chat.id
-    chat=update.message.location
+    location=update.message.location
     text='Manzil uchun rahmat'
     longitude=update.message.location.longitude
     latitude=update.message.location.latitude
-    print(chat)
     f.write(str(location))
     bot.send_message(chat_id, text)
     bot.send_location(555351863,latitude, longitude)
