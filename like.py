@@ -25,9 +25,32 @@ def like(update, context):
     bot = context.bot
     chat_id = update.message.chat.id
     bot.sendPhoto(chat_id, text,reply_markup=reply_markup)
+lik=[]
+dis=[]
+def edit(update, context):
+    query = update.callback_query
+    data = query.data
+    like = InlineKeyboardButton(text=f'👍 ',callback_data='like')
+    dislike = InlineKeyboardButton(text=f'👍 ',callback_data='dislike')
+    if data=='like':
+        lik.append('a')
+    elif data=='dislike':
+        dis.append('a')
+    query.answer('GOOD!')
+    l=len(lik)   
+    d=len(dis)
+    like = InlineKeyboardButton(text=f'👍 {l}',callback_data='like')
+    dislike = InlineKeyboardButton(text=f'👍 {d}',callback_data='dislike')
+    reply_markup = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [like,dislike]
+        ]
+    )
+    query.edit_message_reply_markup(reply_markup=reply_markup)
 updater = Updater(token)
 updater.dispatcher.add_handler(CommandHandler('start', start))
 updater.dispatcher.add_handler(MessageHandler(Filters.photo, like))
-
+updater.dispatcher.add_handler(CallbackQueryHandler(edit))
+print('end')
 updater.start_polling()
 updater.idle()
