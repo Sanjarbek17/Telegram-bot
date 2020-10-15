@@ -34,9 +34,10 @@ def edit(update, context):
     dislike = InlineKeyboardButton(text=f'👍 ',callback_data='dislike')
     if data=='like':
         lik.append('a')
+        query.answer('you gave like!')
     elif data=='dislike':
         dis.append('a')
-    query.answer('GOOD!')
+        query.answer('you gave dislike!')
     l=len(lik)   
     d=len(dis)
     like = InlineKeyboardButton(text=f'👍 {l}',callback_data='like')
