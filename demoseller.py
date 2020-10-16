@@ -1,7 +1,7 @@
-from telegram.ext import CommandHandler, MessageHandler, Updater, Filters, InlineQueryHandler
+from telegram.ext import CommandHandler, MessageHandler, Updater, Filters, InlineQueryHandler, CallbackQueryHandler
 from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultArticle, InputTextMessageContent
-import os
-TOKEN = os.environ['TOKEN']
+# import os
+# TOKEN = os.environ['TOKEN']
 def start(update,context):
     bot=context.bot
     chat_id=update.message.chat.id
@@ -70,21 +70,51 @@ def catalog(update, context):
     ])
     bot.sendMessage(chat_id, text, reply_markup=reply_markup)
 def inlinequery(update, context):
-    msg=InputTextMessageContent(
+    button=InlineKeyboardButton('➕ Add to cart', callback_data='1')
+    reply_markup=InlineKeyboardMarkup([
+        [button]
+    ])
+    m=InputTextMessageContent(
         message_text='Chili Pizza(14")\n$22.99\n\nOriginal Signature crust, 100% whole milk mozzarella, Canadian-style bacon, applewood smoked bacon, sliced red onions, Dole® pineapple chunks, Kogi™ Serrano Chili sauce drizzle, and topped with fresh chopped cilantro.\n(https://c1.tchpt.com/admin/aux?b=c1~4066c4e45b62c35f92d362574ab3a0c91&a=c1~576&f=KogiSerranoChili_1024x768__2019-07-30_17-33-45.jpg)',
     )
-    result=InlineQueryResultArticle(
+    result2=InlineQueryResultArticle(
         title='Chili Pizza (14)',
-        input_message_content=msg,
+        input_message_content=m,
         thumb_url='https://c1.tchpt.com/admin/aux?b=c1~4066c4e45b62c35f92d362574ab3a0c91&a=c1~576&f=KogiSerranoChili_1024x768__2019-07-30_17-33-45.jpg',
         description='$22.99',
+        reply_markup=reply_markup,
+        thumb_width=1,
         hide_url=True,
         id=1
     )
-    result1=[result]
+    result1=[result2]
     update.inline_query.answer(result1)
-    
-updater=Updater(token=str(TOKEN))
+lst=[]
+def add(update, context):
+    query=update.callback_query
+    data = query.data
+    lst.append(data)
+    query.answer('✅Added to cart')
+    print(lst)
+def cart(update, context):
+    l=len(lst)
+    bot=context.bot
+    chat_id=update.message.chat.id
+    button=InlineKeyboardButton(text='❌ Clear', callback_data='clear')
+    button1=InlineKeyboardButton(text='✅ Place order', callback_data='nothing')
+    reply_markup=InlineKeyboardMarkup([
+        [button, button1]
+    ])
+    bot.sendMessage(chat_id,f'🛒 Cart\n\nChili Pizza (14") - $22.99x{l}=${22.99*l}\n\n💵 Total:${22.99*l}', reply_markup=reply_markup)
+def clear(update, context):
+    for i in lst:
+        del lst[0]
+    query=update.callback_query
+    query.answer('Working')
+    query.edit_message_text('✅ Cart cleared')
+def place(update, context):
+    pass
+updater=Updater(token='1175464841:AAEZ4Omez8DqnmmUCt_h2eTdUnAv3nBMDPs')
 updater.dispatcher.add_handler(CommandHandler('start',start))
 updater.dispatcher.add_handler(MessageHandler(Filters.text('🎛 Administration'),Administration))
 updater.dispatcher.add_handler(MessageHandler(Filters.text('❌ Cancel'), Administration))
@@ -96,6 +126,9 @@ updater.dispatcher.add_handler(MessageHandler(Filters.text('➕ Add category'), 
 updater.dispatcher.add_handler(MessageHandler(Filters.text('📦 New product'), Acategory))
 updater.dispatcher.add_handler(MessageHandler(Filters.text('👋 Welcome text'), Welcome))
 updater.dispatcher.add_handler(MessageHandler(Filters.text('🏬 Catalog'), catalog))
+updater.dispatcher.add_handler(MessageHandler(Filters.text('🛒 Cart'), cart))
+updater.dispatcher.add_handler(CallbackQueryHandler(add, pattern='1'))
 updater.dispatcher.add_handler(InlineQueryHandler(callback=inlinequery))
+updater.dispatcher.add_handler(CallbackQueryHandler(clear, pattern='clear'))
 updater.start_polling()
 updater.idle()
