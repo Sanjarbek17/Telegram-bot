@@ -1,5 +1,5 @@
 from telegram.ext import CommandHandler, MessageHandler, Updater, Filters, InlineQueryHandler, CallbackQueryHandler
-from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultArticle, InputTextMessageContent
+from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultArticle, InputTextMessageContent, KeyboardButton
 # import os
 # TOKEN = os.environ['TOKEN']
 def start(update,context):
@@ -70,7 +70,7 @@ def catalog(update, context):
     ])
     bot.sendMessage(chat_id, text, reply_markup=reply_markup)
 def inlinequery(update, context):
-    button=InlineKeyboardButton('➕ Add to cart', callback_data='1')
+    button=InlineKeyboardButton('➕ Add to cart', callback_data='add')
     reply_markup=InlineKeyboardMarkup([
         [button]
     ])
@@ -101,23 +101,42 @@ def cart(update, context):
     bot=context.bot
     chat_id=update.message.chat.id
     button=InlineKeyboardButton(text='❌ Clear', callback_data='clear')
-    button1=InlineKeyboardButton(text='✅ Place order', callback_data='nothing')
+    button1=InlineKeyboardButton(text='✅ Place order', callback_data='place')
     reply_markup=InlineKeyboardMarkup([
         [button, button1]
     ])
     bot.sendMessage(chat_id,f'🛒 Cart\n\nChili Pizza (14") - $22.99x{l}=${22.99*l}\n\n💵 Total:${22.99*l}', reply_markup=reply_markup)
 def clear(update, context):
-    for i in lst:
-        del lst[0]
+    del lst[:]
     query=update.callback_query
     query.answer('Working')
     query.edit_message_text('✅ Cart cleared')
 def place(update, context):
-    pass
+    bot=update.callback_query.bot
+    chat_id=update.callback_query.message.chat.id
+    button=KeyboardButton('Location', request_location=True)
+    reply_markup=ReplyKeyboardMarkup([
+        [button],
+        ['❌ Cancel.']
+    ], resize_keyboard=True)
+    bot.sendMessage(chat_id,' 📍 Please send the address to which you want your order to be delivered.', reply_markup=reply_markup)
+def location(update, context):
+    bot=context.bot
+    l=len(lst)
+    chat_id=update.message.chat.id
+    button=InlineKeyboardButton(text='❌ Clear', callback_data='clear')
+    button1=InlineKeyboardButton(text='✅ Place order', callback_data='place')
+    reply_markup=InlineKeyboardMarkup([
+        [button, button1]
+    ])
+    bot.sendMessage(chat_id, '👍 Done! Now you can place orders.')
+    bot.sendMessage(chat_id,f'🛒 Cart\n\nChili Pizza (14") - $22.99x{l}=${22.99*l}\n\n💵 Total:${22.99*l}', reply_markup=reply_markup)
 updater=Updater(token='1175464841:AAEZ4Omez8DqnmmUCt_h2eTdUnAv3nBMDPs')
 updater.dispatcher.add_handler(CommandHandler('start',start))
 updater.dispatcher.add_handler(MessageHandler(Filters.text('🎛 Administration'),Administration))
 updater.dispatcher.add_handler(MessageHandler(Filters.text('❌ Cancel'), Administration))
+updater.dispatcher.add_handler(MessageHandler(Filters.text('❌ Cancel.'), start))
+updater.dispatcher.add_handler(MessageHandler(Filters.text('Location'), start))
 updater.dispatcher.add_handler(MessageHandler(Filters.text('🚪 Exit'), start))
 updater.dispatcher.add_handler(MessageHandler(Filters.text('🤑 Bonus rate'), Bonus))
 updater.dispatcher.add_handler(MessageHandler(Filters.text('🗑 Delete product'), Dproduct))
@@ -127,8 +146,10 @@ updater.dispatcher.add_handler(MessageHandler(Filters.text('📦 New product'), 
 updater.dispatcher.add_handler(MessageHandler(Filters.text('👋 Welcome text'), Welcome))
 updater.dispatcher.add_handler(MessageHandler(Filters.text('🏬 Catalog'), catalog))
 updater.dispatcher.add_handler(MessageHandler(Filters.text('🛒 Cart'), cart))
-updater.dispatcher.add_handler(CallbackQueryHandler(add, pattern='1'))
-updater.dispatcher.add_handler(InlineQueryHandler(callback=inlinequery))
+updater.dispatcher.add_handler(MessageHandler(Filters.location, location))
+updater.dispatcher.add_handler(CallbackQueryHandler(add, pattern='add'))
+updater.dispatcher.add_handler(CallbackQueryHandler(place, pattern='place'))
 updater.dispatcher.add_handler(CallbackQueryHandler(clear, pattern='clear'))
+updater.dispatcher.add_handler(InlineQueryHandler(callback=inlinequery))
 updater.start_polling()
 updater.idle()
