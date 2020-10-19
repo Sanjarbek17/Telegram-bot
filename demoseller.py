@@ -65,8 +65,9 @@ def catalog(update, context):
     chat_id=update.message.chat.id
     text=update.message.text
     button=InlineKeyboardButton('🍕Pizza', switch_inline_query_current_chat='pizza')
+    button2=InlineKeyboardButton('🍾Soda', switch_inline_query_current_chat='soda')
     reply_markup=InlineKeyboardMarkup([
-        [button]
+        [button,button2]
     ])
     bot.sendMessage(chat_id, text, reply_markup=reply_markup)
 def inlinequery(update, context):
@@ -74,20 +75,36 @@ def inlinequery(update, context):
     reply_markup=InlineKeyboardMarkup([
         [button]
     ])
+    txt='\n$22\.99\n\nOriginal Signature crust, 100% whole milk mozzarella, Canadian\-style bacon, applewood smoked bacon, sliced red onions, Dole® pineapple chunks, Kogi™ Serrano Chili sauce drizzle, and topped with fresh chopped cilantro\.'
+    txt2='soda'
+    url='https://c1.tchpt.com/admin/aux?b=c1~4066c4e45b62c35f92d362574ab3a0c91&a=c1~576&f=KogiSerranoChili_1024x768__2019-07-30_17-33-45.jpg'
     m=InputTextMessageContent(
-        message_text='Chili Pizza(14")\n$22.99\n\nOriginal Signature crust, 100% whole milk mozzarella, Canadian-style bacon, applewood smoked bacon, sliced red onions, Dole® pineapple chunks, Kogi™ Serrano Chili sauce drizzle, and topped with fresh chopped cilantro.\n(https://c1.tchpt.com/admin/aux?b=c1~4066c4e45b62c35f92d362574ab3a0c91&a=c1~576&f=KogiSerranoChili_1024x768__2019-07-30_17-33-45.jpg)',
+        message_text=f'[Chili Pizza\(14"\)]({url}) {txt}',
+        parse_mode='MarkdownV2'
+    )
+    m1=InputTextMessageContent(
+        message_text=f'[soda]({url}) {txt2}',
+        parse_mode='MarkdownV2'
     )
     result2=InlineQueryResultArticle(
         title='Chili Pizza (14)',
         input_message_content=m,
-        thumb_url='https://c1.tchpt.com/admin/aux?b=c1~4066c4e45b62c35f92d362574ab3a0c91&a=c1~576&f=KogiSerranoChili_1024x768__2019-07-30_17-33-45.jpg',
+        thumb_url=url,
         description='$22.99',
         reply_markup=reply_markup,
-        thumb_width=1,
         hide_url=True,
         id=1
     )
-    result1=[result2]
+    result1=InlineQueryResultArticle(
+        title='soda',
+        input_message_content=m1,
+        thumb_url=url,
+        description='$0.0',
+        reply_markup=reply_markup,
+        hide_url=True,
+        id=2
+    )
+    result1=[result2,result2]
     update.inline_query.answer(result1)
 lst=[]
 def add(update, context):
@@ -131,6 +148,28 @@ def location(update, context):
     ])
     bot.sendMessage(chat_id, '👍 Done! Now you can place orders.')
     bot.sendMessage(chat_id,f'🛒 Cart\n\nChili Pizza (14") - $22.99x{l}=${22.99*l}\n\n💵 Total:${22.99*l}', reply_markup=reply_markup)
+def order(update, context):
+    bot=context.bot
+    chat_id=update.message.chat.id
+    button=InlineKeyboardButton('❌ Cancel.', callback_data='cancel')
+    reply_markup=InlineKeyboardMarkup([
+        [button]
+    ])
+    bot.sendMessage(chat_id, '✍️ Order #1602922406 (SETTING)\n🛒 Order list:\n\nChili Pizza (14") - $22.99 x1 = $22.99\n\n💵 Amount to pay: $22.99\n\n💬 Comment to the order: None\n📍 Delivery address: bulungur', reply_markup=reply_markup)
+def cancel(update, context):
+    query=update.callback_query
+    query.edit_message_text('❌ Order cancelled')
+def userinfo(update, context):
+    bot=context.bot
+    first=update.message.chat.first_name
+    chat_id=update.message.chat.id
+    button=InlineKeyboardButton('🗺Addresses', callback_data='addresses')
+    button2=InlineKeyboardButton('➕ Add address', callback_data='address')
+    reply_markup=InlineKeyboardMarkup([
+        [button, button2]
+    ])
+    bot.sendMessage(chat_id, f'👤 {first}\n🤝 Invited friends: 0\n💸 Bonus balance: $0.0\nℹ️ You can get 5.0% on your bonus balance from the amount of each order of your invited friends.\n🔗 Your referral link: https://t.me/demosellerbot?start=555351863', reply_markup=reply_markup)
+
 updater=Updater(token='1175464841:AAEZ4Omez8DqnmmUCt_h2eTdUnAv3nBMDPs')
 updater.dispatcher.add_handler(CommandHandler('start',start))
 updater.dispatcher.add_handler(MessageHandler(Filters.text('🎛 Administration'),Administration))
@@ -146,10 +185,13 @@ updater.dispatcher.add_handler(MessageHandler(Filters.text('📦 New product'), 
 updater.dispatcher.add_handler(MessageHandler(Filters.text('👋 Welcome text'), Welcome))
 updater.dispatcher.add_handler(MessageHandler(Filters.text('🏬 Catalog'), catalog))
 updater.dispatcher.add_handler(MessageHandler(Filters.text('🛒 Cart'), cart))
+updater.dispatcher.add_handler(MessageHandler(Filters.text('📦 Orders'), order))
+updater.dispatcher.add_handler(MessageHandler(Filters.text('👤 Userinfo'), userinfo))
 updater.dispatcher.add_handler(MessageHandler(Filters.location, location))
 updater.dispatcher.add_handler(CallbackQueryHandler(add, pattern='add'))
 updater.dispatcher.add_handler(CallbackQueryHandler(place, pattern='place'))
 updater.dispatcher.add_handler(CallbackQueryHandler(clear, pattern='clear'))
+updater.dispatcher.add_handler(CallbackQueryHandler(cancel, pattern='cancel'))
 updater.dispatcher.add_handler(InlineQueryHandler(callback=inlinequery))
 updater.start_polling()
 updater.idle()
