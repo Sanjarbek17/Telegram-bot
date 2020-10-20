@@ -64,53 +64,131 @@ def catalog(update, context):
     bot=context.bot
     chat_id=update.message.chat.id
     text=update.message.text
-    button=InlineKeyboardButton('🍕Pizza', switch_inline_query_current_chat='pizza')
-    button2=InlineKeyboardButton('🍾Soda', switch_inline_query_current_chat='soda')
+    button=InlineKeyboardButton('Nikai', switch_inline_query_current_chat='nikai')
+    button2=InlineKeyboardButton('Emerald', switch_inline_query_current_chat='emerald')
+    button3=InlineKeyboardButton('Marwa', switch_inline_query_current_chat='marwa')
     reply_markup=InlineKeyboardMarkup([
-        [button,button2]
+        [button,button2],
+        [button3]
     ])
     bot.sendMessage(chat_id, text, reply_markup=reply_markup)
-def inlinequery(update, context):
-    button=InlineKeyboardButton('➕ Add to cart', callback_data='add')
-    reply_markup=InlineKeyboardMarkup([
-        [button]
-    ])
-    txt='\n$22\.99\n\nOriginal Signature crust, 100% whole milk mozzarella, Canadian\-style bacon, applewood smoked bacon, sliced red onions, Dole® pineapple chunks, Kogi™ Serrano Chili sauce drizzle, and topped with fresh chopped cilantro\.'
-    txt2='soda'
-    url='https://c1.tchpt.com/admin/aux?b=c1~4066c4e45b62c35f92d362574ab3a0c91&a=c1~576&f=KogiSerranoChili_1024x768__2019-07-30_17-33-45.jpg'
+lid=[]
+def photo(update, context):
+    sid=update.message.photo[0].file_id
+    lid.append(sid)
+    print(lid)
+def nikai(update, context):
+    txt2='Odul'
+    odul='https://raw.githubusercontent.com/Sanjar1218/Telegram-bot/master/odul.jpg'
+    fresh='https://raw.githubusercontent.com/Sanjar1218/Telegram-bot/master/fresh.jpg'
+    pechka='https://raw.githubusercontent.com/Sanjar1218/Telegram-bot/master/pechka.jpg'
+    pechka1='https://raw.githubusercontent.com/Sanjar1218/Telegram-bot/master/pechka1.jpg'
+    utok='https://raw.githubusercontent.com/Sanjar1218/Telegram-bot/master/utok.jpg'
     m=InputTextMessageContent(
-        message_text=f'[Chili Pizza\(14"\)]({url}) {txt}',
+        message_text=f'[Odul]({odul})s {txt2}',
         parse_mode='MarkdownV2'
     )
-    m1=InputTextMessageContent(
-        message_text=f'[soda]({url}) {txt2}',
+    m2=InputTextMessageContent(
+        message_text=f'[Fresh]({fresh})s {txt2}',
         parse_mode='MarkdownV2'
     )
-    result2=InlineQueryResultArticle(
-        title='Chili Pizza (14)',
-        input_message_content=m,
-        thumb_url=url,
+    m3=InputTextMessageContent(
+        message_text=f'[Pechka]({pechka})s {txt2}',
+        parse_mode='MarkdownV2'
+    )
+    m4=InputTextMessageContent(
+        message_text=f'[pechka1]({pechka1})s {txt2}',
+        parse_mode='MarkdownV2'
+    )
+    m5=InputTextMessageContent(
+        message_text=f'[Utok]({utok})s {txt2}',
+        parse_mode='MarkdownV2'
+    )
+    result5=InlineQueryResultArticle(
+        title='Utok',
+        input_message_content=m5,
+        thumb_url=utok,
         description='$22.99',
-        reply_markup=reply_markup,
+        hide_url=True,
+        id=5
+    )
+    result4=InlineQueryResultArticle(
+        title='Pechka1',
+        input_message_content=m4,
+        thumb_url=pechka1,
+        description='$22.99',
+        hide_url=True,
+        id=4
+    )
+    result3=InlineQueryResultArticle(
+        title='Pechka',
+        input_message_content=m3,
+        thumb_url=pechka,
+        description='$22.99',
+        hide_url=True,
+        id=3
+    )
+    result1=InlineQueryResultArticle(
+        title='Odul',
+        input_message_content=m2,
+        thumb_url=odul,
+        description='$22.99',
         hide_url=True,
         id=1
     )
-    result1=InlineQueryResultArticle(
-        title='soda',
-        input_message_content=m1,
-        thumb_url=url,
-        description='$0.0',
-        reply_markup=reply_markup,
+    result2=InlineQueryResultArticle(
+        title='Fresh',
+        input_message_content=m,
+        thumb_url=fresh,
+        description='$22.99',
         hide_url=True,
         id=2
     )
-    result1=[result2,result2]
-    update.inline_query.answer(result1)
+    result=[result1,result2,result3,result4,result5]
+    update.inline_query.answer(result)
+def emerald(update, context):
+    emerald='https://images-aka.kay.com/kay/gemstone/2020/hero_updates/k_aug20_gemstone_emerald.jpg'
+    txt2='soda'
+    m1=InputTextMessageContent(
+        message_text=f'[Emerald]({emerald}) {txt2}',
+        parse_mode='MarkdownV2'
+    )
+    result1=InlineQueryResultArticle(
+        title='Emerald',
+        input_message_content=m1,
+        thumb_url=emerald,
+        description='$0.0',
+        hide_url=True,
+        id=2
+    )
+    result=[result1]
+    update.inline_query.answer(result)
+def marwa(update, context):    
+    marwa='https://images.muslimnames.com/marwa_muslim_girls_names_meaning_islamic_girls_names.png'
+    txt2='soda'
+    m2=InputTextMessageContent(
+        message_text=f'[Marwa]({marwa}) {txt2}',
+        parse_mode='MarkdownV2'
+    )
+    result1=InlineQueryResultArticle(
+        title='Marwa',
+        input_message_content=m2,
+        thumb_url=marwa,
+        description='$0.0',
+        hide_url=True,
+        id=3
+    )
+    result=[result1]
+    update.inline_query.answer(result)
 lst=[]
+lst1=[]
 def add(update, context):
     query=update.callback_query
+    id=query.inline_message_id
+    print(query)
     data = query.data
     lst.append(data)
+    query.edit_message_text(id)
     query.answer('✅Added to cart')
     print(lst)
 def cart(update, context):
@@ -170,7 +248,7 @@ def userinfo(update, context):
     ])
     bot.sendMessage(chat_id, f'👤 {first}\n🤝 Invited friends: 0\n💸 Bonus balance: $0.0\nℹ️ You can get 5.0% on your bonus balance from the amount of each order of your invited friends.\n🔗 Your referral link: https://t.me/demosellerbot?start=555351863', reply_markup=reply_markup)
 
-updater=Updater(token='1175464841:AAEZ4Omez8DqnmmUCt_h2eTdUnAv3nBMDPs')
+updater=Updater(token='1396169156:AAEtmTZvh-L_3FGTG_u7E5Fn2HtOyqkj0dI')
 updater.dispatcher.add_handler(CommandHandler('start',start))
 updater.dispatcher.add_handler(MessageHandler(Filters.text('🎛 Administration'),Administration))
 updater.dispatcher.add_handler(MessageHandler(Filters.text('❌ Cancel'), Administration))
@@ -192,6 +270,9 @@ updater.dispatcher.add_handler(CallbackQueryHandler(add, pattern='add'))
 updater.dispatcher.add_handler(CallbackQueryHandler(place, pattern='place'))
 updater.dispatcher.add_handler(CallbackQueryHandler(clear, pattern='clear'))
 updater.dispatcher.add_handler(CallbackQueryHandler(cancel, pattern='cancel'))
-updater.dispatcher.add_handler(InlineQueryHandler(callback=inlinequery))
+updater.dispatcher.add_handler(InlineQueryHandler(nikai, pattern='nikai'))
+updater.dispatcher.add_handler(InlineQueryHandler(emerald, pattern='emerald'))
+updater.dispatcher.add_handler(InlineQueryHandler(marwa, pattern='marwa'))
+updater.dispatcher.add_handler(MessageHandler(Filters.photo, photo))
 updater.start_polling()
 updater.idle()
