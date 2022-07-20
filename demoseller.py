@@ -248,7 +248,7 @@ def userinfo(update, context):
     ])
     bot.sendMessage(chat_id, f'👤 {first}\n🤝 Invited friends: 0\n💸 Bonus balance: $0.0\nℹ️ You can get 5.0% on your bonus balance from the amount of each order of your invited friends.\n🔗 Your referral link: https://t.me/demosellerbot?start=555351863', reply_markup=reply_markup)
 
-updater=Updater(token='1396169156:AAEtmTZvh-L_3FGTG_u7E5Fn2HtOyqkj0dI')
+updater=Updater(token='5128554563:AAFAxYqhCb4w5eKXuh5P3iU23apTrLyRz5Q')
 updater.dispatcher.add_handler(CommandHandler('start',start))
 updater.dispatcher.add_handler(MessageHandler(Filters.text('🎛 Administration'),Administration))
 updater.dispatcher.add_handler(MessageHandler(Filters.text('❌ Cancel'), Administration))
